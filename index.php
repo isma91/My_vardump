@@ -14,25 +14,45 @@
 /*
 *@TODO: check ressource ?
 */
+function display_null () {
+	echo "NULL\n";
+}
+function display_boolean ($value) {
+	if ($value === false) {
+		echo "bool(false)" . "\n";
+	} else {
+		echo "bool(true)" . "\n";
+	}
+}
+function display_string ($value) {
+	echo 'string(' . strlen($value) . ') "' . $value . '"' . "\n";
+}
+function display_int ($value) {
+	echo "int(" . $value . ")\n";
+}
+function display_double ($value) {
+	echo "double(" . $value . ")\n";
+}
+function display_array ($value) {
+	$space_repeat_count = 2;
+	echo "array(" . count($value) . ") {\n";
+	foreach ($value as $value_key => $value_value) {
+		echo str_repeat(" ", $space_repeat_count) . "'" . $value_key . "' =>\n";
+	}
+}
 function my_vardump ($value) {
 	if (is_array($value)) {
+		display_array($value);
 	} elseif (is_bool($value)) {
-		if ($value === false) {
-			echo "bool(false)" . "\n";
-		} else {
-			echo "bool(true)" . "\n";
-		}
+		display_boolean($value);
 	} elseif (is_float($value) || is_double($value)) {
-		echo "double(" . $value . ")\n";
+		display_double($value);
 	} elseif (is_int($value)) {
-		echo "int(" . $value . ")\n";
+		display_int($value);
 	} elseif (is_null($value)) {
-		echo "NULL\n";
+		display_null();
 	} elseif (is_object($value)) {
 	} elseif (is_string($value)) {
-		echo 'string(' . strlen($value) . ') "' . $value . '"' . "\n";
+		display_string($value);
 	}
-	return "unknown type";
 }
-my_vardump(__DIR__);
-var_dump(__DIR__);
