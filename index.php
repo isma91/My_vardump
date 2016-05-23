@@ -13,6 +13,7 @@
 */
 /*
 *@TODO: check ressource ?
+*@TODO: for display class, how i can get the numer of instance of the class ?
 */
 function display_null ($space = 0) {
 	echo str_repeat(" ", $space) . "NULL\n";
@@ -42,6 +43,49 @@ function display_array ($value, $space = 0) {
 	}
 	echo str_repeat(" ", $space - 2) . "}\n";
 }
+function display_object ($value, $space = 0) {
+	$num_property = 0;
+	$class = new ReflectionClass($value);
+	$array_all_property = array();
+	if (count($class->getProperties(ReflectionProperty::IS_PUBLIC)) !== 0) {
+		foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $class_public) {
+			$array_all_property["public"]["$" . $class_public->getName()] = "";
+		}
+	}
+	if (count($class->getProperties(ReflectionProperty::IS_PRIVATE)) !== 0) {
+		foreach ($class->getProperties(ReflectionProperty::IS_PRIVATE) as $class_private) {
+			$array_all_property["private"]["$" . $class_private->getName()] = "";
+		}
+	}
+	if (count($class->getProperties(ReflectionProperty::IS_PROTECTED)) !== 0) {
+		foreach ($class->getProperties(ReflectionProperty::IS_PROTECTED) as $class_protected) {
+			$array_all_property["protected"]["$" . $class_protected->getName()] = "";
+		}
+	}
+	foreach ($array_all_property as $type_property => $array_type_property) {
+		foreach ($array_type_property as $key => $property) {
+			if ($type_property === "public") {
+				$array_all_property[$type_property][$key] = $class->getProperty(substr($key, 1))->getValue($value);
+			} else {
+				$protected_private_property = $class->getProperty(substr($key, 1));
+				$protected_private_property->setAccessible(true);
+				$array_all_property[$type_property][$key] = $protected_private_property->getValue($value);
+			}
+		}
+	}
+	foreach ($array_all_property as $type_property => $array_type_property) {
+		$num_property = $num_property + count($array_type_property);
+	}
+	echo str_repeat(" ", $space) . "class" . " " . $class->getName() . " (" . $num_property . ") {\n";
+	$space = $space + 2;
+	foreach ($array_all_property as $type_property => $array_type_property) {
+		foreach ($array_type_property as $property_name => $property_value) {
+			echo str_repeat(" ", $space) . $type_property . " " . $property_name . " => \n";
+			my_vardump($property_value, $space);
+		}
+	}
+	echo str_repeat(" ", $space - 2) . "}\n";
+}
 function my_vardump ($value, $space = 0) {
 	if (is_array($value)) {
 		display_array($value, $space);
@@ -54,6 +98,7 @@ function my_vardump ($value, $space = 0) {
 	} elseif (is_null($value)) {
 		display_null($space, $space);
 	} elseif (is_object($value)) {
+		display_object($value, $space);
 	} elseif (is_string($value)) {
 		display_string($value, $space);
 	}
