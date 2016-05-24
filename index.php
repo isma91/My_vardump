@@ -12,7 +12,6 @@
 * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 /*
-*@TODO: check ressource ?
 *@TODO: for display class, how i can get the numer of instance of the class ?
 */
 function display_null ($space = 0) {
@@ -76,7 +75,7 @@ function display_object ($value, $space = 0) {
 	foreach ($array_all_property as $type_property => $array_type_property) {
 		$num_property = $num_property + count($array_type_property);
 	}
-	echo str_repeat(" ", $space) . "class" . " " . $class->getName() . " (" . $num_property . ") {\n";
+	echo str_repeat(" ", $space) . "class" . " " . $class->getName() . "# (" . $num_property . ") {\n";
 	$space = $space + 2;
 	foreach ($array_all_property as $type_property => $array_type_property) {
 		foreach ($array_type_property as $property_name => $property_value) {
