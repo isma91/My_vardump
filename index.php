@@ -12,7 +12,7 @@
 * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
 */
 /*
-*@TODO: for display class, how i can get the numer of instance of the class ?
+*@TODO: for display class, need to know how many class has been created ?
 */
 function display_null ($space = 0) {
 	echo str_repeat(" ", $space) . "NULL\n";
@@ -37,7 +37,11 @@ function display_array ($value, $space = 0) {
 	echo str_repeat(" ", $space) . "array(" . count($value) . ") {\n";
 	$space = $space + 2;
 	foreach ($value as $value_key => $value_value) {
-		echo str_repeat(" ", $space) . "'" . $value_key . "' =>\n";
+		if (is_int($value_key)) {
+			echo str_repeat(" ", $space) . "[" . $value_key . "] =>\n";
+		} else {
+			echo str_repeat(" ", $space) . "'" . $value_key . "' =>\n";
+		}
 		my_vardump($value_value, $space);
 	}
 	echo str_repeat(" ", $space - 2) . "}\n";
